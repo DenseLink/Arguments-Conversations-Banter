@@ -76,7 +76,10 @@
           conceptId: concept.id,
           weightLabel: ["Primary (High)", "Secondary (Medium)", "Seed (Low)"][i],
           prompt: prompt ? prompt.prompt : "Practice this concept in your next conversation.",
-          book: C[tid].book
+          book: C[tid].book,
+          page: concept.page,
+          source: concept.source,
+          link: "modules/" + tid + "/concept.html?c=" + concept.id
         });
       });
     });
@@ -114,7 +117,12 @@
       var pool = pools[tid];
       var c = pool[cursor[tid] % pool.length];
       cursor[tid]++;
-      return { track: tid, trackName: C[tid].short, accent: C[tid].accent, id: c.id, name: c.name, book: C[tid].book };
+      return {
+        track: tid, trackName: C[tid].short, accent: C[tid].accent,
+        id: c.id, name: c.name, book: C[tid].book,
+        page: c.page, source: c.source,
+        link: "modules/" + tid + "/concept.html?c=" + c.id
+      };
     }
 
     var phases = [
@@ -151,7 +159,9 @@
               id: "combo-" + weekNo,
               name: "Combo Challenge: fuse " + a.name + " + " + b.name + " + " + c.name,
               book: "All three sources",
-              combo: true
+              combo: true,
+              parts: [a, b, c],
+              link: a.link
             });
           } else {
             concepts.push(next(slot));

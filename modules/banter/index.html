@@ -17,8 +17,8 @@
       </a>
       <nav class="nav-links">
         <a href="../../index.html">Dashboard</a>
-        <a href="../communication/index.html">Communication</a>
         <a href="../comedy/index.html">Comedy</a>
+        <a href="../communication/index.html">Communication</a>
       </nav>
     </div>
   </header>
@@ -29,29 +29,10 @@
       <span class="eyebrow" id="modEyebrow"></span>
       <h1 id="modTitle"></h1>
       <p class="src" id="modSrc"></p>
+      <p class="mod-intro">Each concept below has its own dedicated lesson page &mdash; a full teaching breakdown, a Learn / Develop / Apply deep dive, related cross-skills, and an interactive simulator with <strong>300 expandable worked examples</strong>.</p>
     </section>
 
-    <nav class="concept-nav" id="conceptNav"></nav>
-
-    <section id="concepts"></section>
-
-    <!-- SIMULATOR -->
-    <section class="concept sim" id="simulator" style="scroll-margin-top:130px">
-      <h2>300-Question Solo Practice Simulator</h2>
-      <div class="c-block">
-        <h4><span class="num">6</span>Interactive Practice Simulator</h4>
-        <p class="c-breakdown">Randomized scenario prompts pulled live from this track's 300-question bank. Read the prompt, respond out loud or in writing, then advance. Mark reps as practiced to track your progress (saved to your browser).</p>
-        <div class="sim-card" id="simCard"></div>
-        <div class="sim-count-bar"><span id="simBar"></span></div>
-        <div class="sim-controls">
-          <button class="btn" id="simPrev">&larr; Prev</button>
-          <button class="btn btn-primary" id="simDone">Mark practiced &amp; next</button>
-          <button class="btn" id="simNext">Skip &rarr;</button>
-          <button class="btn btn-ghost" id="simShuffle">Shuffle</button>
-          <span class="sim-progress" id="simProgress"></span>
-        </div>
-      </div>
-    </section>
+    <section class="concept-grid" id="conceptGrid"></section>
   </main>
 
   <footer class="site-foot">
@@ -62,8 +43,6 @@
 
   <script>window.CM_TRACK = "banter";</script>
   <script src="../../js/content.js"></script>
-  <script src="../../js/questions.js"></script>
-  <script src="../../js/planner.js"></script>
   <script src="../../js/app.js"></script>
   <script src="../../js/module.js"></script>
 </body>

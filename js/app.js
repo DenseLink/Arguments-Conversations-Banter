@@ -220,13 +220,16 @@
     html += '<ol class="daily-list">';
     d.tasks.forEach(function (task, i) {
       var done = d.done && d.done[i];
+      var cite = task.page || task.book;
       html += '<li class="daily-task' + (done ? ' done' : '') + '" style="--accent:' + task.accent + '">' +
         '<label><input type="checkbox" data-i="' + i + '"' + (done ? ' checked' : '') + '>' +
         '<span class="dt-body">' +
         '<span class="dt-head"><b>' + task.trackName + '</b> \u00b7 ' + task.weightLabel + ' \u00b7 <i>' + task.concept + '</i></span>' +
         '<span class="dt-prompt">' + task.prompt + '</span>' +
-        '<span class="dt-src">Source: ' + task.book + '</span>' +
-        '</span></label></li>';
+        '</span></label>' +
+        '<a class="dt-cite" href="' + task.link + '" title="Open the full concept lesson, simulator &amp; 300 examples">' +
+        ICON.book + '<span><b>' + cite + '</b><small>Click to learn this concept \u2192</small></span></a>' +
+        '</li>';
     });
     html += '</ol>';
     host.innerHTML = html;
@@ -256,9 +259,15 @@
       var items = wk.concepts.map(function (c) {
         var key = "w" + wk.week + "-" + c.id;
         var done = STORE.isPlanDone(key);
+        var cite = c.combo ? c.book : (c.page || c.book);
+        var link = c.link || (c.track && c.track !== "combo" ? "modules/" + c.track + "/concept.html?c=" + c.id : null);
+        var citeHtml = link
+          ? '<a class="tl-cite" href="' + link + '" title="Open the full concept lesson">' + ICON.book + cite + ' \u2192</a>'
+          : '<span class="tl-cite plain">' + ICON.book + cite + '</span>';
         return '<li class="' + (done ? 'done' : '') + (c.combo ? ' combo' : '') + '" style="--accent:' + c.accent + '">' +
           '<label><input type="checkbox" data-key="' + key + '"' + (done ? ' checked' : '') + '>' +
-          '<span><em>' + c.trackName + '</em> ' + c.name + '</span></label></li>';
+          '<span><em>' + c.trackName + '</em> ' + c.name + '</span></label>' +
+          citeHtml + '</li>';
       }).join("");
       html += '<div class="tl-week p' + wk.phase + '">' +
         '<div class="tl-head"><span class="tl-no">Week ' + wk.week + '</span>' +
@@ -304,8 +313,8 @@
     host.innerHTML =
       stat(dailyDone + "/" + dailyTotal, "Daily tasks done") +
       stat(planDone + "/" + planTotal, "Milestones complete") +
-      stat(sim + "", "Sim drills practiced") +
-      stat("900", "Total practice questions");
+      stat(sim + "", "Examples practiced") +
+      stat("6,300", "Interactive examples");
   }
   function stat(v, l) { return '<div class="stat"><span class="stat-v">' + v + '</span><span class="stat-l">' + l + '</span></div>'; }
 
