@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Communication Module &mdash; Conversational Mastery</title>
+  <link rel="stylesheet" href="../../css/styles.css" />
+</head>
+<body>
+  <header class="site-head">
+    <div class="wrap">
+      <a class="brand" href="../../index.html">
+        <span class="logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h10M4 18h7"/><circle cx="18" cy="15" r="3"/></svg>
+        </span>
+        <span>Conversational Mastery<small>Learning Module</small></span>
+      </a>
+      <nav class="nav-links">
+        <a href="../../index.html">Dashboard</a>
+        <a href="../comedy/index.html">Comedy</a>
+        <a href="../banter/index.html">Banter</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="mod-head">
+      <a class="back-link" href="../../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Back to dashboard</a>
+      <span class="eyebrow" id="modEyebrow"></span>
+      <h1 id="modTitle"></h1>
+      <p class="src" id="modSrc"></p>
+    </section>
+
+    <nav class="concept-nav" id="conceptNav"></nav>
+
+    <section id="concepts"></section>
+
+    <!-- SIMULATOR -->
+    <section class="concept sim" id="simulator" style="scroll-margin-top:130px">
+      <h2>300-Question Solo Practice Simulator</h2>
+      <div class="c-block">
+        <h4><span class="num">6</span>Interactive Practice Simulator</h4>
+        <p class="c-breakdown">Randomized scenario prompts pulled live from this track's 300-question bank. Read the prompt, respond out loud or in writing, then advance. Mark reps as practiced to track your progress (saved to your browser).</p>
+        <div class="sim-card" id="simCard"></div>
+        <div class="sim-count-bar"><span id="simBar"></span></div>
+        <div class="sim-controls">
+          <button class="btn" id="simPrev">&larr; Prev</button>
+          <button class="btn btn-primary" id="simDone">Mark practiced &amp; next</button>
+          <button class="btn" id="simNext">Skip &rarr;</button>
+          <button class="btn btn-ghost" id="simShuffle">Shuffle</button>
+          <span class="sim-progress" id="simProgress"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">Conversational Mastery Platform &middot; 100% offline &middot; state saved in your browser.</div>
+  </footer>
+
+  <div id="toast"></div>
+
+  <script>window.CM_TRACK = "communication";</script>
+  <script src="../../js/content.js"></script>
+  <script src="../../js/questions.js"></script>
+  <script src="../../js/planner.js"></script>
+  <script src="../../js/app.js"></script>
+  <script src="../../js/module.js"></script>
+</body>
+</html>

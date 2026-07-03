@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conversational Mastery Platform</title>
+  <meta name="description" content="A standalone educational platform for comedic engineering, communication foundations, and conversational banter mastery." />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-head">
+    <div class="wrap">
+      <a class="brand" href="index.html">
+        <span class="logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h10M4 18h7"/><circle cx="18" cy="15" r="3"/></svg>
+        </span>
+        <span>Conversational Mastery<small>Clever &middot; Persuasive &middot; Magnetic</small></span>
+      </a>
+      <nav class="nav-links">
+        <a href="#preferences">Preferences</a>
+        <a href="#daily">Daily</a>
+        <a href="#plan">Master Plan</a>
+        <a href="#tracks">Tracks</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap" id="dashboard">
+    <!-- HERO -->
+    <section class="hero">
+      <span class="eyebrow">The Adaptive Planning Engine</span>
+      <h1>Learn to be <span class="grad">clever, persuasive &amp; magnetic</span> &mdash; systematically.</h1>
+      <p class="lede">Three research-backed tracks built from real source literature: comedic engineering, the classical art of persuasion, and real-time witty banter. Rank your interests and let the engine build your daily reps and a 12-week mastery roadmap.</p>
+      <div class="stat-bar" id="statBar"></div>
+    </section>
+
+    <!-- PREFERENCES -->
+    <section class="section" id="preferences">
+      <div class="section-head">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 6h13M3 12h9M3 18h5"/><path d="M20 8v8M17 13l3 3 3-3"/></svg></span>
+        <div><h2>1 &middot; Rank Your Interests</h2><p>Drag (or use &uarr;&darr;) to order the tracks from highest to lowest interest. This drives both planners.</p></div>
+      </div>
+      <div class="panel">
+        <ul class="pref-list" id="prefList"></ul>
+        <p class="hint">Position 1 = highest interest (weighted heaviest). Changes save automatically &mdash; regenerate the challenge / plan to apply the new weighting.</p>
+      </div>
+    </section>
+
+    <!-- DAILY -->
+    <section class="section" id="daily">
+      <div class="section-head">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3.4"/></svg></span>
+        <div><h2>2 &middot; Dynamic Daily Challenge</h2><p>A cohesive daily block, proportionally weighted <b>60% / 30% / 10%</b> across your ranked tracks.</p></div>
+      </div>
+      <div class="panel">
+        <div class="btn-row">
+          <button class="btn btn-primary" id="genDaily">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></svg>
+            Generate Daily Challenge
+          </button>
+        </div>
+        <div id="dailyBlock"></div>
+      </div>
+    </section>
+
+    <!-- MASTER PLAN -->
+    <section class="section" id="plan">
+      <div class="section-head">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg></span>
+        <div><h2>3 &middot; Long-Term Mastery Plan</h2><p>A 12-week, 3-phase roadmap. Every week mixes all three sources; phase focus follows your ranking.</p></div>
+      </div>
+      <div class="panel">
+        <div class="btn-row">
+          <button class="btn btn-primary" id="genPlan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg>
+            Generate Long-Term Master Plan
+          </button>
+          <button class="btn btn-ghost" id="resetAll">Reset all progress</button>
+        </div>
+        <div id="planBlock"></div>
+      </div>
+    </section>
+
+    <!-- TRACKS -->
+    <section class="section" id="tracks">
+      <div class="section-head">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2Z"/><path d="M4 17h14"/></svg></span>
+        <div><h2>4 &middot; Explore the Learning Modules</h2><p>Each module delivers concept breakdowns, drills, mental models, and a 300-question practice simulator.</p></div>
+      </div>
+      <div class="track-grid" id="trackCards"></div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      Conversational Mastery Platform &middot; Built from <em>The Comic Toolbox</em>, <em>Thank You for Arguing</em> &amp; <em>The Art of Witty Banter</em>.
+      <br />100% offline &middot; zero dependencies &middot; state saved in your browser.
+    </div>
+  </footer>
+
+  <div id="toast"></div>
+
+  <!-- classic scripts (no ES modules) so the app runs straight off the file system -->
+  <script src="js/content.js"></script>
+  <script src="js/questions.js"></script>
+  <script src="js/planner.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
