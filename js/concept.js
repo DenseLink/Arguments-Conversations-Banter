@@ -104,15 +104,20 @@
       html += '</ol></div>';
     }
 
-    html += block("Signature Examples", listHTML(c.examples));
-    html += block("Practical Preparation Drills", listHTML(c.drills));
-    html += block("Mental Models &amp; Reframing", listHTML(c.models));
+    html += listBlock("Signature Examples", c.examples);
+    html += listBlock("Practical Preparation Drills", c.drills);
+    html += listBlock("Mental Models &amp; Reframing", c.models);
 
     host.innerHTML = html;
   }
 
   function block(title, body) {
     return '<div class="c-block"><h4>' + title + '</h4>' + body + '</div>';
+  }
+  // Renders a block only when the list has content (keeps lean skills tidy).
+  function listBlock(title, arr) {
+    if (!arr || !arr.length) return '';
+    return block(title, listHTML(arr));
   }
   function listHTML(arr) {
     return '<ul class="c-list">' + (arr || []).map(function (x) { return '<li>' + x + '</li>'; }).join("") + '</ul>';

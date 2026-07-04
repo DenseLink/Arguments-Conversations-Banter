@@ -254,6 +254,18 @@ svg { width: 20px; height: 20px; display: block; }
 /* -------------------------------------------------- module OVERVIEW grid */
 .mod-intro { color: var(--muted); font-size: 15px; max-width: 720px; margin: 12px 0 0; }
 .concept-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; margin: 30px 0 20px; }
+
+/* Chapter-grouped module layout (chapter of the book -> skills within it) */
+.chapter-list { margin: 26px 0 20px; }
+.chapter { margin: 0 0 40px; }
+.chapter-head { position: relative; padding: 16px 0 14px; border-top: 2px solid var(--accent); margin-bottom: 4px; }
+.chapter-num { display: inline-block; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--accent); }
+.chapter-head h2 { font-size: clamp(21px, 2.6vw, 27px); margin: 6px 0 0; line-height: 1.2; }
+.chapter-page { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+.chapter-page svg { width: 14px; height: 14px; }
+.chapter-blurb { color: var(--muted); font-size: 14.5px; max-width: 760px; margin: 8px 0 0; }
+.chapter-count { position: absolute; top: 16px; right: 0; font-size: 12px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; }
+.chapter .concept-grid { margin: 16px 0 0; }
 .concept-card {
   --accent: var(--brand);
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);

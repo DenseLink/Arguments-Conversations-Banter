@@ -310,11 +310,13 @@
     var planTotal = 0, planDone = 0;
     if (plan) plan.weeks.forEach(function (w) { w.concepts.forEach(function (c) { planTotal++; if (STORE.isPlanDone("w" + w.week + "-" + c.id)) planDone++; }); });
     var sim = STORE.simCount("comedy") + STORE.simCount("communication") + STORE.simCount("banter");
+    var totalEx = 0;
+    C._order.forEach(function (tid) { totalEx += C[tid].concepts.length * 300; });
     host.innerHTML =
       stat(dailyDone + "/" + dailyTotal, "Daily tasks done") +
       stat(planDone + "/" + planTotal, "Milestones complete") +
       stat(sim + "", "Examples practiced") +
-      stat("6,300", "Interactive examples");
+      stat(totalEx.toLocaleString(), "Interactive examples");
   }
   function stat(v, l) { return '<div class="stat"><span class="stat-v">' + v + '</span><span class="stat-l">' + l + '</span></div>'; }
 
