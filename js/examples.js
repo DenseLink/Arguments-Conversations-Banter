@@ -59,6 +59,46 @@
     { ph: "at a community class", subj: "this class" }
   ];
 
+  // Communication is persuasion, not small talk — so it gets its own bank of
+  // real-stakes rhetorical situations (work, negotiation, family, civic, written)
+  // so every drill is targeted to where arguments actually get won or lost.
+  var CONTEXTS_COMM = [
+    { ph: "in a salary-review conversation", subj: "your raise" },
+    { ph: "pitching a plan to a skeptical boss", subj: "the plan" },
+    { ph: "in a tense team meeting", subj: "the decision" },
+    { ph: "negotiating a deadline with a client", subj: "the timeline" },
+    { ph: "talking a teenager out of a bad idea", subj: "the choice" },
+    { ph: "in a disagreement with your partner about money", subj: "the budget" },
+    { ph: "asking a landlord to fix something", subj: "the repair" },
+    { ph: "in a performance review you're leading", subj: "the feedback" },
+    { ph: "defusing an argument between two coworkers", subj: "the conflict" },
+    { ph: "persuading a committee to fund your project", subj: "the proposal" },
+    { ph: "handling an angry customer", subj: "their complaint" },
+    { ph: "in a hiring debrief where opinions split", subj: "the candidate" },
+    { ph: "asking your team to adopt a new process", subj: "the change" },
+    { ph: "responding to a critical email from a stakeholder", subj: "the concern" },
+    { ph: "at a town-hall about a local issue", subj: "the issue" },
+    { ph: "talking a friend out of a risky decision", subj: "the risk" },
+    { ph: "negotiating a car price", subj: "the price" },
+    { ph: "asking for an extension from a professor", subj: "the extension" },
+    { ph: "mediating a family dispute at a holiday dinner", subj: "the disagreement" },
+    { ph: "convincing a vendor to honor a warranty", subj: "the warranty" },
+    { ph: "presenting quarterly results to leadership", subj: "the numbers" },
+    { ph: "in a debate with a colleague over strategy", subj: "the strategy" },
+    { ph: "asking a direct report to raise their game", subj: "their work" },
+    { ph: "winning over a resistant new client", subj: "the partnership" },
+    { ph: "in a heated group chat about weekend plans", subj: "the plan" },
+    { ph: "making the case for a promotion", subj: "the promotion" },
+    { ph: "talking down a frustrated teammate", subj: "the setback" },
+    { ph: "in a neighborhood-association meeting", subj: "the rule" },
+    { ph: "explaining a missed deadline to your manager", subj: "the delay" },
+    { ph: "recommending a course of action to a wary audience", subj: "the recommendation" },
+    { ph: "closing a deal on the phone", subj: "the deal" },
+    { ph: "settling a rules dispute during a board game", subj: "the ruling" },
+    { ph: "asking investors for a follow-on check", subj: "the round" },
+    { ph: "steering a derailed meeting back on track", subj: "the agenda" }
+  ];
+
   // Global scenario framings ({ctx} = context phrase, {task} = concept task).
   var FRAMINGS = [
     "You're {ctx}. {task}",
@@ -71,6 +111,21 @@
     "A small awkward silence lands {ctx}. {task}",
     "{cap_task} \u2014 the setting: {ctx}.",
     "Practice this {ctx}: {task}"
+  ];
+
+  // Persuasion-specific framings: they name the stakes and the resistance, so
+  // the drill rehearses winning a real argument rather than filling a silence.
+  var FRAMINGS_COMM = [
+    "You're {ctx} and the room is leaning the other way. {task}",
+    "You're {ctx}. The moment to move them is now \u2014 {task}",
+    "Resistance is building {ctx}. {task}",
+    "You get one clean shot {ctx}. {task}",
+    "The other side just pushed back {ctx}. {task}",
+    "Emotions are running hot {ctx}. {task}",
+    "You need a yes {ctx}. {task}",
+    "They're skeptical {ctx}. {task}",
+    "{cap_task} \u2014 the stakes: you're {ctx}.",
+    "Before they decide {ctx}, {task}"
   ];
 
   function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
@@ -103,10 +158,15 @@
     var bank = [], seen = {};
     var fi = 0, ci = 0, guard = 0;
 
+    // Communication drills use the persuasion-specific context + framing banks
+    // so every generated example is targeted to a real argument.
+    var ctxSet = track === "communication" ? CONTEXTS_COMM : CONTEXTS;
+    var frameSet = track === "communication" ? FRAMINGS_COMM : FRAMINGS;
+
     while (bank.length < 300 && guard < 200000) {
       guard++;
-      var framing = FRAMINGS[fi % FRAMINGS.length];
-      var ctx = CONTEXTS[ci % CONTEXTS.length];
+      var framing = frameSet[fi % frameSet.length];
+      var ctx = ctxSet[ci % ctxSet.length];
       var scenario = framing
         .replace("{ctx}", ctx.ph)
         .replace("{task}", task)
@@ -132,7 +192,7 @@
         });
       }
       ci++;
-      if (ci % CONTEXTS.length === 0) fi++;
+      if (ci % ctxSet.length === 0) fi++;
       if (guard % 991 === 0) { ci += 1 + Math.floor(rng() * 3); fi += 1; }
     }
     return bank;

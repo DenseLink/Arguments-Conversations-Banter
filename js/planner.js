@@ -117,9 +117,25 @@
 
     var high = prefs[0], medium = prefs[1], low = prefs[2];
 
-    // shuffled pools of skills per track so the ordering feels fresh
+    // Pools of skills per track, ordered SIMPLE -> COMPLEX so the roadmap
+    // builds progressively: a skill's level (1 foundational, 2 intermediate,
+    // 3 advanced) decides its slot; ties keep the book's own chapter order,
+    // which already runs from basics to advanced technique. This guarantees
+    // that what a learner practiced earlier underpins what comes next.
+    function levelOf(c, idx, total) {
+      if (typeof c.level === "number") return c.level;
+      // infer three even tiers from position if no explicit level is set
+      return idx < total / 3 ? 1 : (idx < (2 * total) / 3 ? 2 : 3);
+    }
     var pools = {};
-    prefs.forEach(function (t) { pools[t] = shuffleArr(C[t].concepts.slice(), rng); });
+    prefs.forEach(function (t) {
+      var list = C[t].concepts.slice();
+      var total = list.length;
+      pools[t] = list
+        .map(function (c, i) { return { c: c, i: i, lv: levelOf(c, i, total) }; })
+        .sort(function (a, b) { return a.lv - b.lv || a.i - b.i; })
+        .map(function (x) { x.c._planLevel = x.lv; return x.c; });
+    });
     var cursor = { comedy: 0, communication: 0, banter: 0 };
     var covered = {};        // "track/id" -> true, real (non-combo) skills only
     var coveredCount = 0;
@@ -131,6 +147,7 @@
         track: tid, trackName: C[tid].short, accent: C[tid].accent,
         id: c.id, name: c.name, book: C[tid].book,
         page: c.page, source: c.source,
+        level: c.level || c._planLevel || null, builds: c.builds || null,
         link: "modules/" + tid + "/concept.html?c=" + c.id
       };
     }

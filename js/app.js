@@ -50,6 +50,7 @@
     getPrefs: function () { return state.prefs.slice(); },
     setDaily: function (d) { d.done = d.done || {}; state.daily = d; save(); },
     getDaily: function () { return state.daily; },
+    clearDaily: function () { state.daily = null; save(); },
     toggleDailyTask: function (i) {
       if (!state.daily) return;
       state.daily.done = state.daily.done || {};
@@ -186,10 +187,17 @@
   function bindButtons() {
     var d = document.getElementById("genDaily");
     if (d) d.addEventListener("click", function () {
-      var challenge = P.generateDailyChallenge(STORE.getPrefs(), { total: 6 });
+      var seed = (Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0;
+      var challenge = P.generateDailyChallenge(STORE.getPrefs(), { total: 6, seed: seed });
       STORE.setDaily(challenge);
       renderDaily();
       flash("New daily challenge generated.");
+    });
+    var dr = document.getElementById("resetDaily");
+    if (dr) dr.addEventListener("click", function () {
+      STORE.clearDaily();
+      renderDaily();
+      flash("Daily challenge reset.");
     });
     var m = document.getElementById("genPlan");
     if (m) m.addEventListener("click", function () {
@@ -268,9 +276,11 @@
         var citeHtml = link
           ? '<a class="tl-cite" href="' + link + '" title="Open the full concept lesson">' + ICON.book + cite + ' \u2192</a>'
           : '<span class="tl-cite plain">' + ICON.book + cite + '</span>';
+        var lvlNames = { 1: "Foundational", 2: "Intermediate", 3: "Advanced" };
+        var lvlHtml = c.level ? '<span class="tl-level l' + c.level + '" title="Difficulty \u2014 the roadmap runs simple to complex">' + lvlNames[c.level] + '</span>' : '';
         return '<li class="' + (done ? 'done' : '') + (c.combo ? ' combo' : '') + '" style="--accent:' + c.accent + '">' +
           '<label><input type="checkbox" data-key="' + key + '"' + (done ? ' checked' : '') + '>' +
-          '<span><em>' + c.trackName + '</em> ' + c.name + '</span></label>' +
+          '<span><em>' + c.trackName + '</em> ' + c.name + lvlHtml + '</span></label>' +
           citeHtml + '</li>';
       }).join("");
       html += '<div class="tl-week p' + wk.phase + '">' +

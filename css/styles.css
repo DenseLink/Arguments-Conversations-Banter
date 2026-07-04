@@ -155,6 +155,10 @@ svg { width: 20px; height: 20px; display: block; }
 .tl-items em { color: var(--brand); font-style: normal; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; display: block; }
 .tl-items li.done { opacity: .5; }
 .tl-items li.done span { text-decoration: line-through; }
+.tl-level { display: inline-block; margin-left: 6px; font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: 1px 6px; border-radius: 999px; vertical-align: middle; white-space: nowrap; }
+.tl-level.l1 { color: #8fd6b4; background: rgba(53,194,139,.14); border: 1px solid rgba(53,194,139,.35); }
+.tl-level.l2 { color: #9ec2ff; background: rgba(110,168,254,.14); border: 1px solid rgba(110,168,254,.35); }
+.tl-level.l3 { color: #c4a7f5; background: rgba(124,58,237,.16); border: 1px solid rgba(124,58,237,.4); }
 .tl-bar { height: 5px; border-radius: 999px; background: var(--line); overflow: hidden; }
 .tl-bar span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--brand), var(--good)); transition: width .4s ease; }
 
