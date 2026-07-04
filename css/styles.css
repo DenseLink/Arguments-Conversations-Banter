@@ -190,7 +190,7 @@ svg { width: 20px; height: 20px; display: block; }
 .back-link:hover { color: var(--text); }
 .back-link svg { transform: rotate(180deg); width: 16px; height: 16px; }
 
-.concept-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 8px; position: sticky; top: 66px; background: rgba(14,17,22,.8); backdrop-filter: blur(8px); padding: 10px 0; z-index: 10; }
+.concept-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 8px; background: rgba(14,17,22,.8); backdrop-filter: blur(8px); padding: 10px 0; z-index: 10; }
 .concept-nav a { font-size: 13px; padding: 7px 13px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line); color: var(--muted); font-weight: 600; transition: .16s; }
 .concept-nav a:hover, .concept-nav a.active { color: #fff; background: var(--accent); border-color: transparent; }
 
