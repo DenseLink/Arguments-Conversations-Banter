@@ -2,7 +2,8 @@
  * planner.js  —  Algorithmic, interest-weighted planning engine.
  *
  *   A. generateDailyChallenge(prefs)  -> proportional 60/30/10 daily block
- *   B. generateMasterPlan(prefs)      -> 12-week, 3-phase mastery roadmap
+ *   B. generateMasterPlan(prefs)      -> full-coverage, 3-phase mastery roadmap
+ *                                        (scales to cover every skill)
  *
  * "prefs" is an ordered array of track ids, HIGHEST interest first, e.g.
  *   ["banter", "comedy", "communication"]
@@ -94,14 +95,21 @@
   }
 
   /* ---------------------------------------------------------------------------
-   * B. LONG-TERM MASTER PLAN — 12 weeks across 3 phases.
+   * B. LONG-TERM MASTER PLAN — full-coverage, interest-weighted roadmap.
    *
-   * The Mix Rule: every week blends concepts from ALL three tracks.
-   * Preference-driven focus:
-   *   Phase 1 (wk 1-4)  : ~65% HIGH interest  + seed medium/low
-   *   Phase 2 (wk 5-8)  : ~65% MEDIUM interest + deep-dive LOW + maintain high
-   *   Phase 3 (wk 9-12) : focus LOW interest    + integration combo challenges
+   * The plan length is NOT fixed. It scales to however many weeks are needed to
+   * cover EVERY skill across ALL three tracks at least once (5 skills/week), so
+   * a bigger library simply produces a longer roadmap.
+   *
+   * The Mix Rule: every week blends skills from all three tracks.
+   * Preference-driven focus (phases are thirds of the total length):
+   *   Phase 1 (Foundation)   : lean HIGH interest   + seed medium/low
+   *   Phase 2 (Acceleration) : lean MEDIUM interest + deep-dive low + maintain high
+   *   Phase 3 (Integration)  : lean LOW interest     + combo challenges that fuse
+   *                            already-learned skills from all three tracks
    * ------------------------------------------------------------------------ */
+  var SLOTS_PER_WEEK = 5;
+
   function generateMasterPlan(prefs, opts) {
     opts = opts || {};
     var seed = opts.seed != null ? opts.seed : hash(prefs.join(","));
@@ -109,14 +117,16 @@
 
     var high = prefs[0], medium = prefs[1], low = prefs[2];
 
-    // rotating pools of concepts per track so weeks don't repeat concepts
+    // shuffled pools of skills per track so the ordering feels fresh
     var pools = {};
     prefs.forEach(function (t) { pools[t] = shuffleArr(C[t].concepts.slice(), rng); });
     var cursor = { comedy: 0, communication: 0, banter: 0 };
-    function next(tid) {
-      var pool = pools[tid];
-      var c = pool[cursor[tid] % pool.length];
-      cursor[tid]++;
+    var covered = {};        // "track/id" -> true, real (non-combo) skills only
+    var coveredCount = 0;
+
+    var totalConcepts = prefs.reduce(function (s, t) { return s + C[t].concepts.length; }, 0);
+
+    function mk(tid, c) {
       return {
         track: tid, trackName: C[tid].short, accent: C[tid].accent,
         id: c.id, name: c.name, book: C[tid].book,
@@ -125,65 +135,93 @@
       };
     }
 
-    var phases = [
-      {
-        n: 1, name: "Foundation Phase", focus: high,
-        blurb: "Build a strong base in your highest-interest track while seeding the other two.",
-        // per-week concept mix (track id per slot)
-        mix: [high, high, high, medium, low]
-      },
-      {
-        n: 2, name: "Acceleration Phase", focus: medium,
-        blurb: "Shift the core to your medium track, deep-dive the lowest, and maintain the first.",
-        mix: [medium, medium, medium, low, high]
-      },
-      {
-        n: 3, name: "Integration Phase", focus: low,
-        blurb: "Master your lowest-interest track and fuse all three with combination challenges.",
-        mix: [low, low, medium, high, "combo"]
+    // Draw the next *uncovered* skill, preferring the requested track. If that
+    // track is fully covered, fall back to any track that still has uncovered
+    // skills (preference order). Once everything is covered, cycle for review.
+    function next(preferred) {
+      var order = [preferred].concat(prefs.filter(function (t) { return t !== preferred; }));
+      for (var k = 0; k < order.length; k++) {
+        var t = order[k], pool = pools[t];
+        for (var i = 0; i < pool.length; i++) {
+          var idx = (cursor[t] + i) % pool.length;
+          var c = pool[idx], key = t + "/" + c.id;
+          if (!covered[key]) {
+            cursor[t] = idx + 1;
+            covered[key] = true; coveredCount++;
+            return mk(t, c);
+          }
+        }
       }
+      // all covered — return a review pick from the preferred track
+      var rp = pools[preferred];
+      var rc = rp[cursor[preferred] % rp.length];
+      cursor[preferred]++;
+      return mk(preferred, rc);
+    }
+
+    function coveredPick(tid) {
+      var pool = pools[tid];
+      for (var i = 0; i < pool.length; i++) {
+        var c = pool[i];
+        if (covered[tid + "/" + c.id]) return mk(tid, c);
+      }
+      return mk(tid, pool[Math.floor(rng() * pool.length)]);
+    }
+
+    // Number of weeks needed to touch every skill (5 new skills/week),
+    // rounded up to a whole number of 3 equal phases (min 12 for a full arc).
+    var weeksNeeded = Math.ceil(totalConcepts / SLOTS_PER_WEEK);
+    var phaseLen = Math.max(4, Math.ceil(weeksNeeded / 3));
+    var totalWeeks = phaseLen * 3;
+
+    var phaseDefs = [
+      { n: 1, name: "Foundation Phase", focus: high,
+        blurb: "Build a strong base in your highest-interest track while seeding the other two.",
+        mix: [high, high, high, medium, low] },
+      { n: 2, name: "Acceleration Phase", focus: medium,
+        blurb: "Shift the core to your medium track, deep-dive the lowest, and maintain the first.",
+        mix: [medium, medium, medium, low, high] },
+      { n: 3, name: "Integration Phase", focus: low,
+        blurb: "Master your lowest-interest track and fuse all three with combination challenges.",
+        mix: [low, low, medium, high, high] }
     ];
 
     var weeks = [];
-    var weekNo = 0;
-    phases.forEach(function (phase) {
-      for (var w = 0; w < 4; w++) {
-        weekNo++;
-        var concepts = [];
-        phase.mix.forEach(function (slot) {
-          if (slot === "combo") {
-            // an integration challenge merging all three tracks
-            var a = next(high), b = next(medium), c = next(low);
-            concepts.push({
-              track: "combo", trackName: "Integration", accent: "#7c3aed",
-              id: "combo-" + weekNo,
-              name: "Combo Challenge: fuse " + a.name + " + " + b.name + " + " + c.name,
-              book: "All three sources",
-              combo: true,
-              parts: [a, b, c],
-              link: a.link
-            });
-          } else {
-            concepts.push(next(slot));
-          }
-        });
-        weeks.push({
-          week: weekNo,
-          phase: phase.n,
-          phaseName: phase.name,
-          focusTrack: phase.focus,
-          focusName: C[phase.focus].short,
-          blurb: phase.blurb,
-          concepts: concepts
+    for (var weekNo = 1; weekNo <= totalWeeks; weekNo++) {
+      var phase = phaseDefs[Math.min(2, Math.floor((weekNo - 1) / phaseLen))];
+      var concepts = [];
+      phase.mix.forEach(function (slot) { concepts.push(next(slot)); });
+
+      // Integration weeks add a combo challenge that fuses already-learned
+      // skills from all three tracks (does not consume new coverage).
+      if (phase.n === 3) {
+        var a = coveredPick(high), b = coveredPick(medium), c = coveredPick(low);
+        concepts.push({
+          track: "combo", trackName: "Integration", accent: "#7c3aed",
+          id: "combo-" + weekNo,
+          name: "Combo Challenge: fuse " + a.name + " + " + b.name + " + " + c.name,
+          book: "All three sources", combo: true, parts: [a, b, c], link: a.link
         });
       }
-    });
+
+      weeks.push({
+        week: weekNo,
+        phase: phase.n,
+        phaseName: phase.name,
+        focusTrack: phase.focus,
+        focusName: C[phase.focus].short,
+        blurb: phase.blurb,
+        concepts: concepts
+      });
+    }
 
     return {
       createdAt: new Date().toISOString(),
       seed: seed,
       prefs: prefs.slice(),
-      phaseSummary: phases.map(function (p) {
+      totalWeeks: totalWeeks,
+      totalSkills: totalConcepts,
+      phaseSummary: phaseDefs.map(function (p) {
         return { n: p.n, name: p.name, focus: C[p.focus].short, blurb: p.blurb };
       }),
       weeks: weeks

@@ -197,7 +197,7 @@
       STORE.setPlan(plan);
       state.planProgress = {}; save();
       renderPlan();
-      flash("12-week master plan generated.");
+      flash(plan.totalWeeks + "-week master plan generated — covers all " + plan.totalSkills + " skills.");
     });
     var r = document.getElementById("resetAll");
     if (r) r.addEventListener("click", function () {
@@ -247,9 +247,13 @@
     var host = document.getElementById("planBlock");
     if (!host) return;
     var plan = STORE.getPlan();
-    if (!plan) { host.innerHTML = '<p class="empty">No roadmap yet. Click <strong>Generate Long-Term Master Plan</strong> to build your 12-week timeline.</p>'; return; }
+    if (!plan) { host.innerHTML = '<p class="empty">No roadmap yet. Click <strong>Generate Long-Term Master Plan</strong> to build a timeline that covers every skill.</p>'; return; }
 
-    var html = '<div class="phase-legend">';
+    var html = '';
+    if (plan.totalWeeks) {
+      html += '<p class="plan-coverage">This roadmap runs <strong>' + plan.totalWeeks + ' weeks</strong> and covers all <strong>' + plan.totalSkills + ' skills</strong> across the three tracks &mdash; every skill is scheduled at least once.</p>';
+    }
+    html += '<div class="phase-legend">';
     plan.phaseSummary.forEach(function (p) {
       html += '<div class="phase-chip p' + p.n + '"><b>Phase ' + p.n + ': ' + p.name + '</b><span>Focus: ' + p.focus + '</span><small>' + p.blurb + '</small></div>';
     });
