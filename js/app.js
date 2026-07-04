@@ -207,9 +207,17 @@
       renderPlan();
       flash(plan.totalWeeks + "-week master plan generated — covers all " + plan.totalSkills + " skills.");
     });
+    var rp = document.getElementById("resetPlan");
+    if (rp) rp.addEventListener("click", function () {
+      if (confirm("Clear all checkmarks on the long-term plan? (The plan itself will remain.)")) {
+        state.planProgress = {}; save();
+        renderPlan();
+        flash("Plan progress reset.");
+      }
+    });
     var r = document.getElementById("resetAll");
     if (r) r.addEventListener("click", function () {
-      if (confirm("Reset all preferences, plans and progress?")) {
+      if (confirm("Reset EVERYTHING? (All preferences, plans, progress, and practice history will be cleared.)")) {
         STORE.reset(); initDashboard(); flash("All progress reset.");
       }
     });

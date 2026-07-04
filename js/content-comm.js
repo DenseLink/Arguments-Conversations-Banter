@@ -35,6 +35,13 @@
   C.communication.author = "Jay Heinrichs";
   C.communication.tagline = "The 3,000-year-old art of persuasion, captured chapter by chapter.";
 
+  /* ---- Chapter page numbers (actual PDF pages) ---------------------------- */
+  var CHAPTER_PAGES = {
+    1:14, 2:27, 3:40, 4:55, 5:67, 6:81, 7:98, 8:107, 9:117, 10:142,
+    11:154, 12:168, 13:188, 14:204, 15:221, 16:249, 17:275, 18:289, 19:300,
+    20:311, 21:339, 22:356, 23:370, 24:385, 25:399, 26:420, 27:437, 28:456, 29:472
+  };
+
   /* ---- Chapter metadata (title + one-line focus for the module view) ------ */
   var CHAPTERS = {
     1:  ["Open Your Eyes", "See the arguments happening everywhere \u2014 and the difference between fighting and arguing."],
@@ -70,7 +77,7 @@
 
   function cite(ch) {
     var m = CHAPTERS[ch];
-    return SRC + ", Ch. " + ch + (m ? " \u2014 " + m[0] : "");
+    return "Ch. " + ch + (m ? " \u2014 " + m[0] : "");
   }
 
   /* Compact builder -> full concept object the app/simulator expects. */
@@ -84,7 +91,7 @@
       name: o.name,
       ch: o.ch,
       source: cite(o.ch),
-      page: SRC + ", Ch. " + o.ch,
+      page: CHAPTER_PAGES[o.ch] ? ("p. " + CHAPTER_PAGES[o.ch]) : ("Ch. " + o.ch),
       level: o.level,
       builds: o.builds || [],
       breakdown: o.breakdown,
@@ -2289,7 +2296,7 @@
       title: CHAPTERS[n][0],
       blurb: CHAPTERS[n][1],
       skills: byCh[n] || [],
-      page: "Ch. " + n
+      page: "p. " + (CHAPTER_PAGES[n] || "?")
     };
   });
 
