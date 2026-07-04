@@ -209,15 +209,15 @@
     });
     var rp = document.getElementById("resetPlan");
     if (rp) rp.addEventListener("click", function () {
-      if (confirm("Clear all checkmarks on the long-term plan? (The plan itself will remain.)")) {
+      if (confirm("Clear all checkmarks on the long-term plan? (The plan itself and your practice history will remain unchanged.)")) {
         state.planProgress = {}; save();
         renderPlan();
-        flash("Plan progress reset.");
+        flash("Plan checkmarks cleared.");
       }
     });
-    var r = document.getElementById("resetAll");
-    if (r) r.addEventListener("click", function () {
-      if (confirm("Reset EVERYTHING? (All preferences, plans, progress, and practice history will be cleared.)")) {
+    var rTop = document.getElementById("resetAllTop");
+    if (rTop) rTop.addEventListener("click", function () {
+      if (confirm("Reset EVERYTHING? (All preferences, plans, checkmarks, and practice history will be permanently cleared.)")) {
         STORE.reset(); initDashboard(); flash("All progress reset.");
       }
     });
